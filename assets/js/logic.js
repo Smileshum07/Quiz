@@ -58,12 +58,13 @@ var quizQuestions = [
 ];
    
     
-//console.log(quizQuestions);
-//console.log(Object.values(quizQuestions[0])[1]);
-
+console.log(quizQuestions);
+console.log(Object.values(quizQuestions[0])[2]);
+console.log(Object.values(quizQuestions[0])[1].length);
 // Select DOM elements
 var quizButton = document.getElementById('start');
 var startScreen = document.getElementById('start-screen');
+var questions = document.getElementById('questions');
 var question = document.getElementById('question-title');
 var choices = document.getElementById('choices');
 var time = document.getElementById('time');
@@ -90,11 +91,31 @@ function startQuiz () {
    
     for ( var i = 0; i < Object.values(quizQuestions[0])[1].length; i++ ) {
         var answer = document.createElement('button');
-        answer.textContent = Object.values(quizQuestions[0][1][i]);
+        answer.textContent = Object.values(quizQuestions[0])[1][i];
         choices.appendChild(answer);
+        answer.setAttribute('class', 'btnChoice');
+        console.log(answer.textContent);
     };
     
 };
       
 quizButton.addEventListener('click', startQuiz);
 
+// Get the HTML collection of new created buttons
+var btnChoice = document.getElementsByClassName('choices');
+    console.log(btnChoice);
+
+// The function that shows a next question
+function getNextQuestion() {
+     answer.textContent = Object.values(quizQuestions[1])[1][1];
+    //  for ( var i = 0; i < Object.values(quizQuestions[0])[1].length; i++ ) {
+        
+    //     answer.textContent = Object.values(quizQuestions[i+1])[1][i];
+    //     choices.appendChild(answer);
+    //     answer.setAttribute('class', 'btnChoice');
+        
+    // };
+ };
+
+
+ btnChoice.addEventListener('click', getNextQuestion);
