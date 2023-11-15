@@ -3,119 +3,161 @@ var quizQuestions = [
     {
         question: '1. How many hearts does an octopus have?',
         options: [
-            '5 hearts',
-            '4 hearts',
-            '3 hearts',
-            '2 hearts',
-            '1 heart'
+            'a. 5 hearts',
+            'b. 4 hearts',
+            'c. 3 hearts',
+            'd. 2 hearts',
+            'e. 1 heart'
         ],
-        answer: '3 hearts',
+        answer: 'c. 3 hearts',
     },
     {
         question: '2. What is acrophobia a fear of?',
         options: [
-            'Heights',
-            'Widths',
-            'Spiders',
-            'Acrobats',
-            'Ants'
+            'a. Heights',
+            'b. Widths',
+            'c. Spiders',
+            'd. Acrobats',
+            'e. Ants'
         ],
-        answer: 'Heights',
+        answer: 'a. Heights',
     },
     {
         question: '3. Which is the only body part that is fully grown from birth?',
         options: [
-            'Hands',
-            'Legs',
-            'Heart',
-            'Head',
-            'Eyes'
+            'a. Hands',
+            'b. Legs',
+            'c. Heart',
+            'd. Head',
+            'e. Eyes'
         ],
-        answer: 'Eyes',
+        answer: 'e. Eyes',
     },
     {
         question: '4. What planet is closest to the sun?',
         options: [
-            'Earth',
-            'Mars',
-            'Mercury',
-            'Jupiter',
-            'Venus'
+            'a. Earth',
+            'b. Mars',
+            'c. Mercury',
+            'd. Jupiter',
+            'e. Venus'
         ],
-        answer: 'Mercury',
+        answer: 'c. Mercury',
     },
     {
         question: '5. What is the only continent with land in all four hemispheres?',
         options: [
-            'North America',
-            'Africa',
-            'Australia',
-            'Antarctica',
-            'Eurasia'
+            'a. North America',
+            'b. Africa',
+            'c. Australia',
+            'd. Antarctica',
+            'e. Eurasia'
         ],
-        answer: 'Africa',
+        answer: 'b. Africa',
     },
 ];
    
-    
-console.log(quizQuestions);
-console.log(Object.values(quizQuestions[0])[2]);
-console.log(Object.values(quizQuestions[0])[1].length);
-// Select DOM elements
+// Variables
 var quizButton = document.getElementById('start');
 var startScreen = document.getElementById('start-screen');
 var questions = document.getElementById('questions');
 var question = document.getElementById('question-title');
 var choices = document.getElementById('choices');
 var time = document.getElementById('time');
+var timer = document.getElementsByClassName('timer');
 var secondsLeft = 75;
+var indexQuestion = 0;
+var feedback = document.getElementById('feedback');
+var endScreen = document.getElementById('end-screen');
+var finalScore = document.getElementById('final-score');
+var submit = document.getElementById('submit');
+var input = document.getElementById('initials');
+var scoreTable = [];
 
 // Function that starts quiz
 function startQuiz () {
     startScreen.remove();
     questions.setAttribute('class', 'show');
-    question.textContent = Object.values(quizQuestions[0])[0];
+    question.textContent = quizQuestions[0].question;
        
-   
-    // timer
+    // Timer
     var timerInterval = setInterval(function() {
     secondsLeft--;
     time.textContent = secondsLeft;
 
-    if(secondsLeft === 0) {
+    if(secondsLeft <= 0) {
     // Stops execution of action at set interval
-      clearInterval(timerInterval);
+        clearInterval(timerInterval);
     };
 
   }, 1000);
    
-    for ( var i = 0; i < Object.values(quizQuestions[0])[1].length; i++ ) {
-        var answer = document.createElement('button');
-        answer.textContent = Object.values(quizQuestions[0])[1][i];
-        choices.appendChild(answer);
-        answer.setAttribute('class', 'btnChoice');
-        console.log(answer.textContent);
+    for ( var i = 0; i < quizQuestions[indexQuestion].options.length; i++ ) {
+       var answers = document.createElement('button');
+        answers.textContent = quizQuestions[indexQuestion].options[i];
+        choices.appendChild(answers);
+        answers.setAttribute('class', 'btnChoice');
+        //console.log(answer.textContent);
+        answers.addEventListener('click', checkAnswer);
     };
-    
 };
-      
+
+// Call the startQuiz function
 quizButton.addEventListener('click', startQuiz);
 
-// Get the HTML collection of new created buttons
-var btnChoice = document.getElementsByClassName('choices');
-    console.log(btnChoice);
+// Check answers
+function checkAnswer(event) {
+    console.log(event);
+    var userChoice = event.target.textContent;
+    console.log(userChoice);
+    var correctAnswer = quizQuestions[indexQuestion].answer;
+    console.log(correctAnswer)
+    if (userChoice === correctAnswer) {
+        feedback.textContent = 'Correct!'
+        feedback.style.color = 'Green'
+    } else {
+        secondsLeft -= 10;
+        feedback.textContent = 'Not Correct!';
+        feedback.style.color = 'Red';
+    };
+    indexQuestion++;
+    setTimeout(getNextQuestion, 1000)
+};
+
 
 // The function that shows a next question
 function getNextQuestion() {
-     answer.textContent = Object.values(quizQuestions[1])[1][1];
-    //  for ( var i = 0; i < Object.values(quizQuestions[0])[1].length; i++ ) {
-        
-    //     answer.textContent = Object.values(quizQuestions[i+1])[1][i];
-    //     choices.appendChild(answer);
-    //     answer.setAttribute('class', 'btnChoice');
-        
-    // };
- };
+
+    feedback.textContent = '';
+    // Check if the question exist
+    if (!quizQuestions[indexQuestion]) {
+        return endQuiz();
+    };
+
+    question.textContent = quizQuestions[indexQuestion].question;
+    choices.innerHTML = '';
 
 
- btnChoice.addEventListener('click', getNextQuestion);
+    for (var i = 0; i < quizQuestions[indexQuestion].options.length; i++) {
+        var nextAswers = document.createElement('button');
+        nextAswers.textContent = quizQuestions[indexQuestion].options[i];
+        choices.appendChild(nextAswers);
+        nextAswers.setAttribute('class', 'btn');
+        nextAswers.addEventListener('click', checkAnswer);
+    };
+};
+
+function endQuiz() {
+    questions.setAttribute('class', 'hide');
+    time.remove();
+    endScreen.setAttribute('class', 'show');
+    finalScore.textContent = secondsLeft;
+    submit.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var inputInitials = input.value.trim();
+        console.log(inputInitials);
+        console.log(scoreTable.push(inputInitials + secondsLeft + 'sec'));
+        input.value = '';
+    });
+};
+
