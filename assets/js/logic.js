@@ -58,6 +58,7 @@ var quizQuestions = [
 ];
    
 // Variables
+
 var quizButton = document.getElementById('start');
 var startScreen = document.getElementById('start-screen');
 var questions = document.getElementById('questions');
@@ -69,10 +70,10 @@ var secondsLeft = 75;
 var indexQuestion = 0;
 var feedback = document.getElementById('feedback');
 var endScreen = document.getElementById('end-screen');
-var finalScore = document.getElementById('final-score');
 var submit = document.getElementById('submit');
 var input = document.getElementById('initials');
 var scoreTable = [];
+var scoresHistory = document.querySelector('a');
 
 // Function that starts quiz
 function startQuiz () {
@@ -151,13 +152,28 @@ function endQuiz() {
     questions.setAttribute('class', 'hide');
     time.remove();
     endScreen.setAttribute('class', 'show');
-    finalScore.textContent = secondsLeft;
-    submit.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var inputInitials = input.value.trim();
-        console.log(inputInitials);
-        console.log(scoreTable.push(inputInitials + secondsLeft + 'sec'));
-        input.value = '';
-    });
-};
+    var finalScore = document.getElementById('final-score').textContent = secondsLeft;
+    
+// Submit the initials and score
 
+    submit.addEventListener('click', function (e) {
+        e.preventDefault();
+            var inputInitials = input.value.trim();
+            scoreTable.push(finalScore);
+            scoreTable.push(inputInitials);
+            console.log(scoreTable);
+            localStorage.setItem('scoreTable', JSON.stringify(scoreTable));
+            // Open higscores page
+            window.open("highscores.html", "_blank");
+    });
+    
+};
+ //not working
+function getHightScores() {
+    var highScore = document.createElement('li');
+    var high = JSON.parse(localStorage.getItem("scoreTable"));
+    console.log(highScore);
+    highScore.textContent = high[1] + '-' + high[0];
+    document.appendChild(highScore);
+};
+getHightScores();
