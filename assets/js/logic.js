@@ -65,7 +65,7 @@ var question = document.getElementById('question-title');
 var choices = document.getElementById('choices');
 var time = document.getElementById('time');
 var timer = document.getElementsByClassName('timer');
-var secondsLeft = 75;
+var secondsLeft = 45;
 var indexQuestion = 0;
 var feedback = document.getElementById('feedback');
 var endScreen = document.getElementById('end-screen');
@@ -88,6 +88,7 @@ function startQuiz () {
     if(secondsLeft <= 0) {
     // Stops execution of action at set interval
         clearInterval(timerInterval);
+        return endQuiz();
     };
 
   }, 1000);
@@ -107,11 +108,11 @@ quizButton.addEventListener('click', startQuiz);
 
 // Check answers
 function checkAnswer(event) {
-    console.log(event);
+    //console.log(event);
     var userChoice = event.target.textContent;
-    console.log(userChoice);
+    //console.log(userChoice);
     var correctAnswer = quizQuestions[indexQuestion].answer;
-    console.log(correctAnswer)
+    //console.log(correctAnswer)
     if (userChoice === correctAnswer) {
         feedback.textContent = 'Correct!'
         feedback.style.color = 'Green'
@@ -159,9 +160,9 @@ function endQuiz() {
             var inputInitials = input.value.trim();
             scoreTable.push(inputInitials, finalScore);
             //scoreTable.push(inputInitials);
-            console.log(scoreTable);
+            //console.log(scoreTable);
             localStorage.setItem('scoreTable', JSON.stringify(scoreTable));
-            console.log(scoreTable[0])
+            //console.log(scoreTable[0])
             // Open higscores page
             window.open("highscores.html", "_self");
     });
@@ -169,11 +170,12 @@ function endQuiz() {
 };
 
 // Save my initials and score in to localStorage
-getHightScore();
 function getHightScore() {
     var highscore = document.createElement('li');
     var name = JSON.parse(localStorage.getItem('scoreTable'));
-    console.log(name)
+    //console.log(name)
     highscore.textContent = name[0] + ' ' + '-' + ' ' + name[1];
     highscores.appendChild(highscore);
 }; 
+
+getHightScore();
