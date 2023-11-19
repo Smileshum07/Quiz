@@ -58,7 +58,6 @@ var quizQuestions = [
 ];
    
 // Variables
-
 var quizButton = document.getElementById('start');
 var startScreen = document.getElementById('start-screen');
 var questions = document.getElementById('questions');
@@ -73,11 +72,11 @@ var endScreen = document.getElementById('end-screen');
 var submit = document.getElementById('submit');
 var input = document.getElementById('initials');
 var scoreTable = [];
-var scoresHistory = document.querySelector('a');
 
 // Function that starts quiz
 function startQuiz () {
     startScreen.remove();
+    // Show the first questions
     questions.setAttribute('class', 'show');
     question.textContent = quizQuestions[0].question;
        
@@ -92,7 +91,7 @@ function startQuiz () {
     };
 
   }, 1000);
-   
+    // Show the options of answers
     for ( var i = 0; i < quizQuestions[indexQuestion].options.length; i++ ) {
        var answers = document.createElement('button');
         answers.textContent = quizQuestions[indexQuestion].options[i];
@@ -138,7 +137,6 @@ function getNextQuestion() {
     question.textContent = quizQuestions[indexQuestion].question;
     choices.innerHTML = '';
 
-
     for (var i = 0; i < quizQuestions[indexQuestion].options.length; i++) {
         var nextAswers = document.createElement('button');
         nextAswers.textContent = quizQuestions[indexQuestion].options[i];
@@ -148,6 +146,7 @@ function getNextQuestion() {
     };
 };
 
+// End the quiz
 function endQuiz() {
     questions.setAttribute('class', 'hide');
     time.remove();
@@ -155,25 +154,26 @@ function endQuiz() {
     var finalScore = document.getElementById('final-score').textContent = secondsLeft;
     
 // Submit the initials and score
-
     submit.addEventListener('click', function (e) {
         e.preventDefault();
             var inputInitials = input.value.trim();
-            scoreTable.push(finalScore);
-            scoreTable.push(inputInitials);
+            scoreTable.push(inputInitials, finalScore);
+            //scoreTable.push(inputInitials);
             console.log(scoreTable);
             localStorage.setItem('scoreTable', JSON.stringify(scoreTable));
+            console.log(scoreTable[0])
             // Open higscores page
-            window.open("highscores.html", "_blank");
+            window.open("highscores.html", "_self");
     });
     
 };
- //not working
-function getHightScores() {
-    var highScore = document.createElement('li');
-    var high = JSON.parse(localStorage.getItem("scoreTable"));
-    console.log(highScore);
-    highScore.textContent = high[1] + '-' + high[0];
-    document.appendChild(highScore);
-};
-getHightScores();
+
+// Save my initials and score in to localStorage
+getHightScore();
+function getHightScore() {
+    var highscore = document.createElement('li');
+    var name = JSON.parse(localStorage.getItem('scoreTable'));
+    console.log(name)
+    highscore.textContent = name[0] + ' ' + '-' + ' ' + name[1];
+    highscores.appendChild(highscore);
+}; 
